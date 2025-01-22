@@ -11,7 +11,7 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "com.straccion.socialapp.android"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -49,11 +49,17 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.datastore.preferences.core)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore)
+    implementation(libs.compose.foundation)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.coil.compose)
     implementation(libs.core)

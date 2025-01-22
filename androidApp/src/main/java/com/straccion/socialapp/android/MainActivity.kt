@@ -6,9 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
-import com.straccion.socialapp.android.theming.SocialAppTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.straccion.socialapp.android.coomon.theming.SocialAppTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+    private val viewModel: MainActivityViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -17,7 +20,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SocialApp()
+                    val token = viewModel.authState.collectAsStateWithLifecycle(initialValue = null)
+                    SocialApp(token.value)
                 }
             }
         }

@@ -3,11 +3,45 @@ package com.straccion.socialapp.android.auth.signup
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.straccion.socialapp.android.coomon.datastore.UserSettings
+import com.straccion.socialapp.android.coomon.datastore.toUserSettings
+import com.straccion.socialapp.auth.domain.usecase.SignUpUseCase
+import com.straccion.socialapp.common.util.Result
+import kotlinx.coroutines.launch
 
-class SignUpViewModel: ViewModel() {
+class SignUpViewModel(
+    private val signUpUseCase: SignUpUseCase,
+    private val dataStore: DataStore<UserSettings>
+): ViewModel() {
     var uiState by mutableStateOf(SignUpUiState())
         private set
+
+    fun signUp(){
+        viewModelScope.launch {
+            uiState = uiState.copy(isAuthenticating = true)
+            val  authResultData = signUpUseCase(uiState.email, uiState.username, uiState.password)
+            uiState = when(authResultData){
+                is Result.Error -> {
+                    uiState.copy(
+                        isAuthenticating = false,
+                        authErrorMessage = authResultData.message
+                    )
+                }
+                is Result.Success -> {
+                    dataStore.updateData {
+                        authResultData.data!!.toUserSettings()
+                    }
+                    uiState.copy(
+                        isAuthenticating = false,
+                        authenticationSucceed = true
+                    )
+                }
+            }
+        }
+    }
 
     fun updateUsername(input: String){
         uiState = uiState.copy(username = input)
@@ -23,5 +57,9 @@ class SignUpViewModel: ViewModel() {
 data class SignUpUiState(
     var username: String = "",
     var email: String = "",
-    var password: String = ""
+    var password: String = "",
+    var isAuthenticating: Boolean = false,
+    var authErrorMessage: String? = null,
+    var authenticationSucceed: Boolean = false
 )
+
