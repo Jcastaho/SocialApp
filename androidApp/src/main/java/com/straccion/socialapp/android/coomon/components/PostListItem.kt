@@ -1,5 +1,6 @@
 package com.straccion.socialapp.android.coomon.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,10 +20,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,42 +34,55 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.straccion.socialapp.android.R
-import com.straccion.socialapp.android.coomon.fake_data.Post
 import com.straccion.socialapp.android.coomon.theming.DarkGray
 import com.straccion.socialapp.android.coomon.theming.ExtraLargeSpacing
 import com.straccion.socialapp.android.coomon.theming.LargeSpacing
 import com.straccion.socialapp.android.coomon.theming.LightGray
 import com.straccion.socialapp.android.coomon.theming.MediumSpacing
+import com.straccion.socialapp.android.coomon.util.toCurrentUrl
+import com.straccion.socialapp.common.domain.model.Post
 
 
 @Composable
 fun PostListItem(
     modifier: Modifier = Modifier,
     post: Post,
-    onPostClick: (Post) -> Unit,
-    onProfileClick: (Int) -> Unit,
-    onLikeClick: () -> Unit,
-    onCommentClick: () -> Unit,
-    isDetailScreen: Boolean = false
+    onPostClick: ((Post) -> Unit)? = null,
+    onProfileClick: (userId: Long) -> Unit,
+    onLikeClick: (Post) -> Unit,
+    onCommentClick: (Post) -> Unit,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     val isSystemInDark = isSystemInDarkTheme()
     Column(
         modifier = modifier
             .fillMaxWidth()
+            //.aspectRatio(ratio = 0.7f)
             .background(color = MaterialTheme.colorScheme.surface)
-            .clickable { onPostClick(post) }
-            .padding(bottom = ExtraLargeSpacing)
+            //.clickable { onPostClick(post) }
+            .let { mod ->
+                if (onPostClick != null) {
+                    mod.clickable { onPostClick(post) }.padding(bottom = ExtraLargeSpacing)
+                } else {
+                    mod
+                }
+            }
     ) {
         PostItemHeader(
-            name = post.authorName,
-            profileUrl = post.authorImage,
+            name = post.userName,
+            profileUrl = post.userImageUrl,
             date = post.createdAt,
-            onProfileClick = { onProfileClick(post.authorId) }
+            onProfileClick = {
+                onProfileClick(
+                    post.userId
+                )
+            }
         )
         AsyncImage(
-            model = post.imageUrl,
+            model = post.imageUrl.toCurrentUrl(),
             contentDescription = null,
-            modifier.fillMaxWidth()
+            modifier
+                .fillMaxWidth()
                 .aspectRatio(ratio = 1.0f)
             ,
             placeholder = if (isSystemInDark) {
@@ -78,19 +94,16 @@ fun PostListItem(
         )
         PostLikesRow(
             likesCount = post.likesCount,
-            commentsCount = post.commentCount,
-            onLikeClick = onLikeClick,
-            onCommentClick = onCommentClick
+            commentCount = post.commentsCount,
+            onLikeClick = { onLikeClick(post) },
+            isPostLiked = post.isLiked,
+            onCommentClick = { onCommentClick(post) }
         )
         Text(
-            text = post.text,
+            text = post.caption,
             style = MaterialTheme.typography.bodyMedium,
             modifier = modifier.padding(horizontal = LargeSpacing),
-            maxLines = if (isDetailScreen){
-                20
-            }else{
-                2
-            },
+            maxLines = maxLines,
             overflow = TextOverflow.Ellipsis
         )
     }
@@ -101,7 +114,7 @@ fun PostListItem(
 fun PostItemHeader(
     modifier: Modifier = Modifier,
     name: String,
-    profileUrl: String,
+    profileUrl: String?,
     date: String,
     onProfileClick: () -> Unit
 ) {
@@ -113,6 +126,7 @@ fun PostItemHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MediumSpacing)
     ) {
+        Log.d("errores", ""+profileUrl)
         CircleImage(
             imageUrl = profileUrl,
             modifier = modifier.size(30.dp)
@@ -164,8 +178,9 @@ fun PostItemHeader(
 fun PostLikesRow(
     modifier: Modifier = Modifier,
     likesCount: Int,
-    commentsCount: Int,
+    commentCount: Int,
     onLikeClick: () -> Unit,
+    isPostLiked: Boolean,
     onCommentClick: () -> Unit
 ) {
     Row(
@@ -177,13 +192,13 @@ fun PostLikesRow(
         val isSystemInDark = isSystemInDarkTheme()
         IconButton(onClick = onLikeClick) {
             Icon(
-                painter = painterResource(R.drawable.like_icon_outlined),
-                contentDescription = null,
-                tint = if (isSystemInDark) {
-                    DarkGray
+                painter = if (isPostLiked) {
+                    painterResource(id = R.drawable.like_icon_filled)
                 } else {
-                    LightGray
-                }
+                    painterResource(id = R.drawable.like_icon_outlined)
+                },
+                contentDescription = null,
+                tint = if (isPostLiked) Color.Red else DarkGray
             )
         }
         Text(
@@ -206,10 +221,8 @@ fun PostLikesRow(
             )
         }
         Text(
-            text = "$commentsCount",
-            style = MaterialTheme.typography.displaySmall.copy(
-                fontSize = 18.sp
-            )
+            text = "$commentCount",
+            style = MaterialTheme.typography.displaySmall.copy(fontSize = 18.sp)
         )
     }
 }

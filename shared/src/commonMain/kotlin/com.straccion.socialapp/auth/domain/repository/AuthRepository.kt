@@ -1,7 +1,5 @@
 package com.straccion.socialapp.auth.domain.repository
 
-
-
 import com.straccion.socialapp.auth.domain.model.AuthResultData
 import com.straccion.socialapp.common.util.Result
 

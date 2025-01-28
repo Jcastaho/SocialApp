@@ -20,7 +20,6 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
-            isStatic = true
         }
     }
 
@@ -40,12 +39,16 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.androidx.datastore.preferences)
             }
         }
 
         val androidMain by getting {
             dependencies {
+                implementation(libs.compose.foundation)
                 implementation(libs.ktor.client.android)
+                implementation(libs.koin.androidx.compose)
+                api(libs.androidx.datastore.preferences.core)
             }
         }
         val iosX64Main by getting
@@ -57,9 +60,18 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
 
-            dependencies {
+            dependencies{
                 implementation(libs.ktor.client.darwin)
             }
+        }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
         }
     }
 }
@@ -74,4 +86,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+dependencies {
+    implementation(libs.androidx.datastore.android)
 }

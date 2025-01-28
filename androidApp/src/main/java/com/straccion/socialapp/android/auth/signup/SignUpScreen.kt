@@ -40,13 +40,12 @@ import com.straccion.socialapp.android.coomon.theming.SmallSpacing
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     uiState: SignUpUiState,
-    onUsernameChanged: (String) -> Unit,
-    onEmailChanged: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onNavigateLogin: () -> Unit,
+    onNavigateToLogin: () -> Unit,
     onNavigateToHome: () -> Unit,
-    onSignUpClick: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onSignUpClick: () -> Unit
 ) {
     val context = LocalContext.current
     Box(
@@ -75,12 +74,12 @@ fun SignUpScreen(
         ) {
             CustomTextField(
                 value = uiState.username,
-                onValueChange = onUsernameChanged,
+                onValueChange = onUsernameChange,
                 hint = R.string.username_hint
             )
             CustomTextField(
                 value = uiState.email,
-                onValueChange = onEmailChanged,
+                onValueChange = onEmailChange,
                 hint = R.string.email_hint,
                 keyboardType = KeyboardType.Email
             )

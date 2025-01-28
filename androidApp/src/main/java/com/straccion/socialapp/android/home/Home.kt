@@ -1,12 +1,10 @@
 package com.straccion.socialapp.android.home
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.straccion.socialapp.android.coomon.fake_data.Post
-import com.straccion.socialapp.android.coomon.fake_data.sampleUsers
 import com.straccion.socialapp.android.destinations.PostDetailDestination
+import com.straccion.socialapp.android.destinations.ProfileDestination
 import org.koin.androidx.compose.koinViewModel
 
 @Destination(start = true)
@@ -18,17 +16,10 @@ fun Home(
 
     HomeScreen(
         onBoardingUiState = viewModel.onBoardingUiState,
-        postsUiState = viewModel.postsUiState,
-        onPostClick = {
-            navigator.navigate(PostDetailDestination(it.id))
-        },
-        onProfileClick = { },
-        onLikeClick = { },
-        onCommentClick = { },
-        onFollowButtonClick = { _, _ -> },
-        onBoardingFinish = { },
-        fetchMoreData = {
-            viewModel.fetchData()
-        }
+        postsFeedUiState = viewModel.postsFeedUiState,
+        homeRefreshState = viewModel.homeRefreshState,
+        onUiAction = {viewModel.onUiAction(it)},
+        onProfileNavigation = {navigator.navigate(ProfileDestination(it))},
+        onPostDetailNavigation = {navigator.navigate(PostDetailDestination(it.postId))}
     )
 }

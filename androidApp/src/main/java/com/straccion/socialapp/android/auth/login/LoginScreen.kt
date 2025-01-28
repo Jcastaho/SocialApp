@@ -41,8 +41,8 @@ import com.straccion.socialapp.android.coomon.theming.SmallSpacing
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    uiState: SignUpUiState,
-    onEmailChanged: (String) -> Unit,
+    uiState: LoginUiState,
+    onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onNavigateToHome: () -> Unit,
     onSignInClick: () -> Unit,
@@ -76,7 +76,7 @@ fun LoginScreen(
         ) {
             CustomTextField(
                 value = uiState.email,
-                onValueChange = onEmailChanged,
+                onValueChange = onEmailChange,
                 hint = R.string.email_hint,
                 keyboardType = KeyboardType.Email
             )
@@ -145,5 +145,4 @@ fun GoToSignUp(
             modifier = modifier.clickable { onNavigateToSignUp() }
         )
     }
-
 }

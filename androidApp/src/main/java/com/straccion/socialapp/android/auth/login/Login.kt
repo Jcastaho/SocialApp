@@ -16,12 +16,12 @@ fun Login(
     val viewModel: LoginViewModel = koinViewModel()
     LoginScreen(
         uiState = viewModel.uiState,
-        onEmailChanged = viewModel::updateEmail,
+        onEmailChange = viewModel::updateEmail,
         onPasswordChange = viewModel::updatePassword,
         onSignInClick = viewModel::signIn,
         onNavigateToHome = {
             navigator.navigate(HomeDestination){
-                popUpTo(LoginDestination) { inclusive = true }
+                popUpTo(LoginDestination){inclusive = true}
             }
         },
         onNavigateToSignup = {

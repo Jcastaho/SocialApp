@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -19,17 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.straccion.socialapp.android.R
 import com.straccion.socialapp.android.coomon.components.CircleImage
 import com.straccion.socialapp.android.coomon.components.FollowsButton
-import com.straccion.socialapp.android.coomon.components.PostItemHeader
-import com.straccion.socialapp.android.coomon.components.PostListItem
-import com.straccion.socialapp.android.coomon.fake_data.FollowsUser
 import com.straccion.socialapp.android.coomon.theming.MediumSpacing
 import com.straccion.socialapp.android.coomon.theming.SmallSpacing
+import com.straccion.socialapp.common.domain.model.FollowsUser
 
 @Composable
 fun OnBoardingUserItem(
@@ -37,7 +35,7 @@ fun OnBoardingUserItem(
     followsUser: FollowsUser,
     onUserClick: (FollowsUser) -> Unit,
     isFollowing: Boolean = false,
-    onFollowingButtonClick: (Boolean, FollowsUser) -> Unit
+    onFollowButtonClick: (Boolean, FollowsUser) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -59,7 +57,7 @@ fun OnBoardingUserItem(
         ) {
             CircleImage(
                 modifier = modifier.size(50.dp),
-                imageUrl = followsUser.profileUrl
+                imageUrl = followsUser.imageUrl
             ) {
                 onUserClick(followsUser)
             }
@@ -73,11 +71,14 @@ fun OnBoardingUserItem(
             Spacer(modifier.height(MediumSpacing))
 
             FollowsButton(
+                text = if (!followsUser.isFollowing) {
+                    R.string.follow_text_label
+                } else R.string.unfollow_text_label,
+                onClick = { onFollowButtonClick(!isFollowing, followsUser) },
                 modifier = modifier
-                    .fillMaxWidth()
-                    .heightIn(30.dp),
-                text = R.string.follow_text_label,
-                onClick = { onFollowingButtonClick(!isFollowing, followsUser) }
+                    .heightIn(30.dp)
+                    .widthIn(100.dp),
+                isOutline = followsUser.isFollowing
             )
         }
     }

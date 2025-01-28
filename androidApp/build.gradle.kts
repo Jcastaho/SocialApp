@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material)
+    implementation(libs.compose.material)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
 

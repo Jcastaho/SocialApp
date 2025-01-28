@@ -16,26 +16,21 @@ fun SignUp(
     val viewModel: SignUpViewModel = koinViewModel()
     SignUpScreen(
         uiState = viewModel.uiState,
-        onUsernameChanged = viewModel::updateUsername,
-        onEmailChanged = viewModel::updateEmail,
+        onUsernameChange = viewModel::updateUsername,
+        onEmailChange = viewModel::updateEmail,
         onPasswordChange = viewModel::updatePassword,
-        onNavigateLogin = {
-            navigator.navigate(LoginDestination){
-                popUpTo(SignUpDestination) { inclusive = true }
-            }
-        },
-        onNavigateToHome = {
-            navigator.navigate(HomeDestination){
-                popUpTo(SignUpDestination) { inclusive = true }
-            }
-        },
-        onSignUpClick = viewModel::signUp,
         onNavigateToLogin = {
             navigator.navigate(LoginDestination){
                 popUpTo(SignUpDestination){
                     inclusive = true
                 }
             }
-        }
+        },
+        onNavigateToHome = {
+            navigator.navigate(HomeDestination){
+                popUpTo(SignUpDestination){inclusive = true}
+            }
+        },
+        onSignUpClick = viewModel::signUp
     )
 }

@@ -15,12 +15,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
+import com.straccion.socialapp.android.MainActivityUiState
 import com.straccion.socialapp.android.R
 import com.straccion.socialapp.android.destinations.LoginDestination
 import com.straccion.socialapp.android.destinations.SignUpDestination
 import com.straccion.socialapp.android.coomon.theming.SmallElevation
+import com.straccion.socialapp.android.destinations.CreatePostDestination
+import com.straccion.socialapp.android.destinations.EditProfileDestination
+import com.straccion.socialapp.android.destinations.FollowersDestination
+import com.straccion.socialapp.android.destinations.FollowingDestination
 import com.straccion.socialapp.android.destinations.HomeDestination
 import com.straccion.socialapp.android.destinations.PostDetailDestination
+import com.straccion.socialapp.android.destinations.ProfileDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,10 +49,7 @@ fun AppBar(
                     IconButton(onClick = {
 
                     }) {
-                        Icon(
-                            painter = painterResource(R.drawable.person_circle_icon),
-                            contentDescription = null
-                        )
+
                     }
                 }
             },
@@ -72,14 +75,20 @@ private fun getAppBartitle(currentDestinationRoute: String?): Int {
         SignUpDestination.route -> R.string.signup_destination_title
         HomeDestination.route -> R.string.home_destination_title
         PostDetailDestination.route -> R.string.post_detail_destination_title
+        ProfileDestination.route -> R.string.profile_destination_title
+        EditProfileDestination.route -> R.string.edit_profile_destination_title
+        FollowingDestination.route -> R.string.following_text
+        FollowersDestination.route -> R.string.followers_text
+        CreatePostDestination.route -> R.string.posts_label
         else -> R.string.no_destination_title
     }
 }
 
 private fun shouldShowNavigationIcon(currentDestinationRoute: String?): Boolean {
     return !(
-            currentDestinationRoute == LoginDestination.route ||
-                    currentDestinationRoute == SignUpDestination.route ||
-                    currentDestinationRoute == HomeDestination.route
+            currentDestinationRoute == LoginDestination.route
+                    || currentDestinationRoute == SignUpDestination.route
+                    || currentDestinationRoute == HomeDestination.route
+                    || currentDestinationRoute == null
             )
 }

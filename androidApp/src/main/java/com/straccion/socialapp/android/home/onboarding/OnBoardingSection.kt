@@ -19,18 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.straccion.socialapp.android.R
-import com.straccion.socialapp.android.coomon.components.PostListItem
-import com.straccion.socialapp.android.coomon.fake_data.FollowsUser
 import com.straccion.socialapp.android.coomon.theming.LargeSpacing
 import com.straccion.socialapp.android.coomon.theming.MediumSpacing
+import com.straccion.socialapp.common.domain.model.FollowsUser
 
 @Composable
 fun OnBoardingSection(
-    modifier: Modifier = Modifier,
     users: List<FollowsUser>,
     onUserClick: (FollowsUser) -> Unit,
     onFollowButtonClick: (Boolean, FollowsUser) -> Unit,
-    onBoardingFinish: () -> Unit
+    onBoardingFinish: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier.fillMaxWidth()
@@ -55,24 +54,23 @@ fun OnBoardingSection(
             onUserClick = onUserClick,
             onFollowButtonClick = onFollowButtonClick
         )
+
         OutlinedButton(
             onClick = onBoardingFinish,
-            modifier.fillMaxWidth(fraction = 0.5f)
+            shape = RoundedCornerShape(percent = 50),
+            modifier = modifier
+                .fillMaxWidth(fraction = 0.5f)
                 .align(Alignment.CenterHorizontally)
-                .padding(vertical = LargeSpacing),
-            shape = RoundedCornerShape(percent = 50)
+                .padding(vertical = LargeSpacing)
         ) {
-            Text(
-                text = stringResource(R.string.onboarding_button_text)
-            )
+            Text(text = stringResource(id = R.string.onboarding_button_text))
         }
-
     }
-
 }
 
+
 @Composable
-fun UsersRow(
+private fun UsersRow(
     modifier: Modifier = Modifier,
     users: List<FollowsUser>,
     onUserClick: (FollowsUser) -> Unit,
@@ -83,12 +81,12 @@ fun UsersRow(
         contentPadding = PaddingValues(horizontal = LargeSpacing),
         modifier = modifier
     ) {
-        items(items = users, key = {followUser -> followUser.id}){
-            OnBoardingUserItem(followsUser = it,
-                onUserClick =  onUserClick,
-                onFollowingButtonClick = onFollowButtonClick
+        items(items = users, key = { user -> user.id }) {
+            OnBoardingUserItem(
+                followsUser = it,
+                onUserClick = onUserClick,
+                onFollowButtonClick = onFollowButtonClick
             )
         }
     }
-
 }

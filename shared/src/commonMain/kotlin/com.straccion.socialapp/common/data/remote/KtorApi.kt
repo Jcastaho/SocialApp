@@ -3,6 +3,7 @@ package com.straccion.socialapp.common.data.remote
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.headers
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.path
@@ -10,8 +11,11 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-//private const val BASE_URL = "http://192.168.1.5:8080" //celular
-private const val BASE_URL = "http://10.0.2.2:8080" // emulador
+//private const val BASE_URL = "http://192.168.1.5:8080/" //celular
+private const val BASE_URL = "http://192.168.1.11:8080/" //celular
+//private const val BASE_URL = "http://127.0.0.1:8080/" //celular
+//private const val BASE_URL = "http://10.0.2.2:8080/" // emulador
+
 internal abstract class KtorApi {
     val client = HttpClient() {
         install(ContentNegotiation) {
@@ -28,5 +32,14 @@ internal abstract class KtorApi {
             path(path)
             contentType(ContentType.Application.Json)
         }
+    }
+    fun HttpRequestBuilder.setToken(token: String) {
+        headers {
+            append(name = "Authorization", value = "Bearer $token")
+        }
+    }
+
+    fun HttpRequestBuilder.setupMultipartRequest(){
+        contentType(ContentType.MultiPart.FormData)
     }
 }

@@ -1,9 +1,10 @@
 package com.straccion.socialapp.android.coomon.fake_data
 
 data class FollowsUser(
-    val id: Int,
+    val id: Long,
     val name: String,
-    val profileUrl: String,
+    val bio: String = "",
+    val imageUrl: String,
     val isFollowing: Boolean = false
 )
 
@@ -11,21 +12,21 @@ val sampleUsers = listOf(
     FollowsUser(
         id = 1,
         name = "Mr Dip",
-        profileUrl = "https://picsum.photos/200"
+        imageUrl = "https://picsum.photos/510"
     ),
     FollowsUser(
         id = 2,
         name = "John Cena",
-        profileUrl = "https://picsum.photos/200"
+        imageUrl = "https://picsum.photos/520"
     ),
     FollowsUser(
         id = 3,
         name = "Cristiano",
-        profileUrl = "https://picsum.photos/200"
+        imageUrl = "https://picsum.photos/530"
     ),
     FollowsUser(
         id = 4,
         name = "L. James",
-        profileUrl = "https://picsum.photos/200"
+        imageUrl = "https://picsum.photos/540"
     )
 )
